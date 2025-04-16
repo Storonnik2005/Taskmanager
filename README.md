@@ -162,6 +162,107 @@
 - Для завершения некоторых системных процессов может потребоваться запуск программы с правами администратора.
 - При запуске новых процессов можно указывать как полный путь, так и имя исполняемого файла, находящегося в PATH.
 
+## Подробное описание функций и компонентов
+
+### 1. Класс TaskManagerUI
+
+#### Основные публичные функции:
+- `TaskManagerUI()` - конструктор
+- `~TaskManagerUI()` - деструктор
+- `void Run()` - запуск приложения
+- `void RefreshProcessList()` - обновление списка процессов
+- `std::wstring FormatMemorySize(SIZE_T size)` - форматирование размера памяти
+- `void InitializeUI()` - инициализация пользовательского интерфейса
+
+#### Приватные функции:
+1. **Управление окнами:**
+   - `bool InitWindow()` - инициализация окна
+   - `void RegisterWindowClass(HINSTANCE hInstance)` - регистрация класса окна
+   - `HWND CreateMainWindow(HINSTANCE hInstance)` - создание главного окна
+   - `void InitializeMenu()` - инициализация меню
+   - `void InitializeListView()` - инициализация списка процессов
+   - `void InitializeStatusBar()` - инициализация строки состояния
+
+2. **Обработка сообщений:**
+   - `static LRESULT CALLBACK WindowProc()` - обработчик сообщений окна
+   - `LRESULT HandleMessage()` - обработка сообщений
+   - `void HandleCommand(int commandId)` - обработка команд меню
+
+3. **Обновление интерфейса:**
+   - `void UpdateStatusBar()` - обновление строки состояния
+   - `void UpdatePerformanceData()` - обновление данных о производительности
+
+4. **Отрисовка графиков:**
+   - `void DrawCpuGraph()` - отрисовка графика CPU
+   - `void DrawMemGraph()` - отрисовка графика памяти
+   - `void DrawNetworkGraph()` - отрисовка графика сети
+   - `void DrawCpuBarGraph()` - отрисовка столбчатого графика CPU
+   - `void DrawMemBarGraph()` - отрисовка столбчатого графика памяти
+   - `void DrawNetworkBarGraph()` - отрисовка столбчатого графика сети
+
+5. **Диалоговые окна:**
+   - `void ShowTerminateProcessDialog()` - диалог завершения процесса
+   - `void ShowStartProcessDialog()` - диалог запуска процесса
+   - `void ShowPerformanceDialog()` - диалог производительности
+
+6. **Утилиты:**
+   - `void SetProcessListColumns()` - настройка колонок списка процессов
+   - `void AddProcessToListView()` - добавление процесса в список
+   - `void SortAndRefreshProcessList()` - сортировка и обновление списка
+
+### 2. Класс ProcessManager
+
+#### Публичные функции:
+- `ProcessManager()` - конструктор
+- `~ProcessManager()` - деструктор
+- `void UpdateProcessList()` - обновление списка процессов
+- `const std::vector<ProcessInfo>& GetProcesses()` - получение списка процессов
+- `bool TerminateProcess(DWORD processId)` - завершение процесса
+- `bool StartNewProcess(const std::wstring& processPath)` - запуск нового процесса
+- `double GetSystemCpuUsage()` - получение загрузки CPU
+- `SIZE_T GetSystemMemoryInfo()` - получение информации о памяти
+- `SystemInfo GetSystemInfo()` - получение системной информации
+- `std::wstring GetProcessStatus(DWORD processId)` - получение статуса процесса
+
+#### Приватные функции:
+- `void UpdateCpuUsage()` - обновление загрузки CPU
+- `double CalculateCpuUsage()` - расчет загрузки CPU для процесса
+
+### 3. Структуры данных
+
+#### ProcessInfo:
+- `DWORD pid` - идентификатор процесса
+- `std::wstring name` - имя процесса
+- `DWORD parentPid` - идентификатор родительского процесса
+- `SIZE_T memoryUsage` - использование памяти
+- `double cpuUsage` - использование CPU
+- `std::wstring status` - статус процесса
+- `ULONGLONG workingSetSize` - размер рабочего набора
+
+#### SystemInfo:
+- `double cpuUsage` - загрузка CPU
+- `double memoryUsagePercent` - процент использования памяти
+- `SIZE_T totalMemory` - общий объем памяти
+- `SIZE_T memoryUsed` - используемая память
+- `SIZE_T memoryAvailable` - доступная память
+- `double networkSendSpeedKBps` - скорость отправки по сети
+- `double networkReceiveSpeedKBps` - скорость приема по сети
+
+#### PerformanceHistory:
+- `std::deque<double> cpuHistory` - история загрузки CPU
+- `std::deque<double> memHistory` - история использования памяти
+- `std::deque<double> netSendHistory` - история отправки по сети
+- `std::deque<double> netReceiveHistory` - история приема по сети
+- `void AddData()` - добавление новых данных
+- `void Clear()` - очистка истории
+
+### 4. Диалоговые функции
+- `TerminateProcessDialogProc()` - обработчик диалога завершения процесса
+- `PerformanceDialogProc()` - обработчик диалога производительности
+
+### 5. Утилиты
+- `LogDebugMessage()` - функция логирования отладочных сообщений
+
 ## Лицензия
 
 Этот проект распространяется под лицензией MIT. 
